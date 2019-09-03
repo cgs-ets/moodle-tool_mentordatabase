@@ -28,17 +28,17 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
 
-    //Add a new category under tools
+    // Add a new category under tools.
     $ADMIN->add('tools',
         new admin_category('tool_mentordatabase', get_string('pluginname', 'tool_mentordatabase')));
 
     $settings = new admin_settingpage('tool_mentordatabase_settings', new lang_string('settings', 'tool_mentordatabase'),
         'moodle/site:config', false);
 
-    // Add the settings page
+    // Add the settings page.
     $ADMIN->add('tool_mentordatabase', $settings);
 
-    // Add the test settings page
+    // Add the test settings page.
     $ADMIN->add('tool_mentordatabase',
             new admin_externalpage('tool_mentordatabase_test', get_string('testsettings', 'tool_mentordatabase'),
                 $CFG->wwwroot . '/' . $CFG->admin . '/tool/mentordatabase/test_settings.php'));
@@ -101,14 +101,16 @@ if ($hassiteconfig) {
     $sql = "SELECT * FROM {role} WHERE id $insql";
     $roles = $DB->get_records_sql($sql, $inparams);
     $i = 1;
-    foreach($roles as $role) {
+    foreach ($roles as $role) {
         $rolename[$i] = $role->shortname;
         $roleid[$i] = $role->id;
         $i++;
     }
     $rolenames = array_combine($roleid, $rolename);
 
-    $settings->add(new admin_setting_configselect('tool_mentordatabase/role', get_string('mentorrole', 'tool_mentordatabase'), get_string('mentorrole_desc', 'tool_mentordatabase'), '', $rolenames));
+    $settings->add(new admin_setting_configselect('tool_mentordatabase/role',
+        get_string('mentorrole', 'tool_mentordatabase'), get_string('mentorrole_desc', 'tool_mentordatabase'),
+        '', $rolenames));
 
     $options = array('id' => 'id', 'idnumber' => 'idnumber', 'email' => 'email', 'username' => 'username');
     $settings->add(new admin_setting_configselect('tool_mentordatabase/localuserfield',

@@ -67,12 +67,13 @@ class tool_mentordatabase_sync {
         $localuserfield        = trim($this->config->localuserfield);
         $remoteuserfield       = strtolower(trim($this->config->remoteuserfield));
         $remotementoridfield   = strtolower(trim($this->config->remotementoridfield));
-        $removeaction          = trim($this->config->removeaction); // (0 = remove, 1 = keep).
+        $removeaction          = trim($this->config->removeaction); // 0 = remove, 1 = keep.
 
-        //Get the roleid we're going to assign.
+        // Get the roleid we're going to assign.
         $roleid = $this->config->role;
 
-        if (empty($mentortable) || empty($localuserfield) || empty($remoteuserfield) || empty($remotementoridfield) || empty($roleid)) {
+        if (empty($mentortable) || empty($localuserfield) || empty($remoteuserfield) || empty($remotementoridfield) ||
+            empty($roleid)) {
             $trace->output('Plugin config not complete.');
             $trace->finished();
             return 1;
@@ -102,23 +103,23 @@ class tool_mentordatabase_sync {
             }
         }
         if (!$hasenoughrecords) {
-            $trace->output("Failed to sync because the external db returned $count records and the minimum required is $minrecords");
+            $trace->output("Failed to sync because the external db returned $count records and the minimum
+                required is $minrecords");
             $trace->finished();
             return 1;
         }
 
-
         // Get list of current mentor relationships.
         $trace->output('Indexing current mentor roles assignments');
 
-        $sql = "SELECT ra.userid as mentorid, c.instanceid as studentid, ra.id as contextid 
-        FROM {role_assignments} ra 
+        $sql = "SELECT ra.userid as mentorid, c.instanceid as studentid, ra.id as contextid
+        FROM {role_assignments} ra
         INNER JOIN {context} c ON ra.contextid = c.id
-        WHERE ra.roleid = ? 
+        WHERE ra.roleid = ?
         AND c.contextlevel = ".CONTEXT_USER;
         $mentorrecords = $DB->get_recordset_sql($sql, array($roleid));
 
-        // Index the current parent to student relationships in an associative array, keyed mentorid_studentid        
+        // Index the current parent to student relationships in an associative array, keyed mentorid_studentid.
         $currentmentors = array();
         foreach ($mentorrecords as $record) {
             $key = $record->mentorid . "_" . $record->studentid;
@@ -126,7 +127,7 @@ class tool_mentordatabase_sync {
         }
         $mentorrecords->close();
 
-        // Get records from the external database and assign mentors
+        // Get records from the external database and assign mentors.
         $trace->output('Starting mentor database user sync');
         $sql = $this->db_get_sql($mentortable);
         if ($rs = $extdb->Execute($sql)) {
@@ -138,29 +139,32 @@ class tool_mentordatabase_sync {
                     $fields[$remotementoridfield] = trim($fields[$remotementoridfield]);
 
                     if (empty($fields[$remoteuserfield]) || empty($fields[$remotementoridfield])) {
-                        $trace->output('error: invalid external mentor record, user fields is mandatory: ' . json_encode($fields), 1);
+                        $trace->output('error: invalid external mentor record, user fields is mandatory: '
+                            . json_encode($fields), 1);
                         continue;
                     }
 
                     $rowdesc = $fields[$remotementoridfield] . " => " . $fields[$remoteuserfield];
                     $usersearch[$localuserfield] = $fields[$remoteuserfield];
                     if (!$student = $DB->get_record('user', $usersearch, 'id', IGNORE_MULTIPLE)) {
-                        $trace->output("error: skipping '$rowdesc' due to unknown user $localuserfield '$fields[$remoteuserfield]'", 1);
+                        $trace->output("error: skipping '$rowdesc' due to unknown user $localuserfield
+                            '$fields[$remoteuserfield]'", 1);
                         continue;
                     }
                     $usersearch[$localuserfield] = $fields[$remotementoridfield];
                     if (!$mentor = $DB->get_record('user', $usersearch, 'id', IGNORE_MULTIPLE)) {
-                        $trace->output("error: skipping '$rowdesc' due to unknown user $localuserfield '$fields[$remotementoridfield]'", 1);
+                        $trace->output("error: skipping '$rowdesc' due to unknown user $localuserfield
+                            '$fields[$remotementoridfield]'", 1);
                         continue;
                     }
 
                     $key = $mentor->id . "_" . $student->id;
                     if (isset($currentmentors[$key])) {
-                        // This mentor relationship already exists
+                        // This mentor relationship already exists.
                         $trace->output('Mentor role already assigned: ' . $key . ' (mentorid_studentid)');
                         unset($currentmentors[$key]);
                     } else {
-                        // Create the relationship
+                        // Create the relationship.
                         $trace->output('Assigning a mentor role: ' . $key . ' (mentorid_studentid)');
                         $usercontext = context_user::instance($student->id);
                         role_assign($roleid, $mentor->id, $usercontext->id);
@@ -170,7 +174,7 @@ class tool_mentordatabase_sync {
         }
         $extdb->Close();
 
-        // Unassign remaining mentor roles
+        // Unassign remaining mentor roles.
         $trace->output('Unassigning removed mentors');
         foreach ($currentmentors as $key => $cr) {
             $trace->output('Unassigning: ' . $key . ' (mentorid_studentid)');

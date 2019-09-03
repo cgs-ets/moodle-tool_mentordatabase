@@ -34,7 +34,7 @@ admin_externalpage_setup('tool_mentordatabase_test');
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('testsettingsheading', 'tool_mentordatabase'));
 
-$returnurl = new moodle_url('/admin/settings.php', array('section'=>'tool_mentordatabase_settings'));
+$returnurl = new moodle_url('/admin/settings.php', array('section' => 'tool_mentordatabase_settings'));
 $mentordatabase = new tool_mentordatabase_sync();
 $mentordatabase->test_settings();
 
