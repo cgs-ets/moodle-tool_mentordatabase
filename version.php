@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2019090400; // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2019090401; // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2017111300; // Requires 3.4.
 $plugin->component = 'tool_mentordatabase';
 $plugin->maturity = MATURITY_STABLE;

@@ -174,7 +174,7 @@ class tool_mentordatabase_sync {
         }
         $extdb->Close();
 
-        if (empty($removeaction)) {
+        if (empty($removeaction) && !empty($currentmentors)) {
             // Unassign remaining mentor roles.
             $trace->output('Unassigning removed mentors');
             foreach ($currentmentors as $key => $cr) {
