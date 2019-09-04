@@ -174,12 +174,14 @@ class tool_mentordatabase_sync {
         }
         $extdb->Close();
 
-        // Unassign remaining mentor roles.
-        $trace->output('Unassigning removed mentors');
-        foreach ($currentmentors as $key => $cr) {
-            $trace->output('Unassigning: ' . $key . ' (mentorid_studentid)');
-            $usercontext = context_user::instance($cr->studentid);
-            role_unassign($roleid, $cr->mentorid, $usercontext->id);
+        if (empty($removeaction)) {
+            // Unassign remaining mentor roles.
+            $trace->output('Unassigning removed mentors');
+            foreach ($currentmentors as $key => $cr) {
+                $trace->output('Unassigning: ' . $key . ' (mentorid_studentid)');
+                $usercontext = context_user::instance($cr->studentid);
+                role_unassign($roleid, $cr->mentorid, $usercontext->id);
+            }
         }
 
         $trace->finished();
