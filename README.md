@@ -1,4 +1,5 @@
 # Mentor external database sync tool for Moodle
+[![Build Status](https://travis-ci.org/cgs-ets/moodle-tool_mentordatabase.svg?branch=master)](https://travis-ci.org/cgs-ets/moodle-tool_mentordatabase)
 
 This plugin syncs parent/mentor relationships using an external database table.
 
