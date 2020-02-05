@@ -5,8 +5,8 @@ This plugin syncs parent/mentor relationships using an external database table.
 
 Author
 --------
-Michael Vangelovski, Canberra Grammar School <michael.vangelovski@cgs.act.edu.au>
-Originally based this plugin on the [tool_cohortdatabase](https://moodle.org/plugins/tool_cohortdatabase) plugin.
+* Michael Vangelovski, Canberra Grammar School <michael.vangelovski@cgs.act.edu.au>
+* Originally based this plugin on the [tool_cohortdatabase](https://moodle.org/plugins/tool_cohortdatabase) plugin.
 
 
 Features
